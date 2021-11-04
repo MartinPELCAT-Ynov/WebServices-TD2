@@ -15,4 +15,13 @@ public class Utilisateur {
     this.email = email;
     this.dateNaissance = dateNaissance;
   }
+
+  public boolean isMembreDirection() {
+    return this instanceof MembreEquipeDirection;
+  }
+
+  @Override
+  public String toString() {
+    return this.nom + " " + this.prenom;
+  }
 }
