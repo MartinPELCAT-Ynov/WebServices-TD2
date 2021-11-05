@@ -158,7 +158,6 @@ public class Exercice6 {
     System.out.println("-----------------------------------------------");
     System.out.println("Utilisateurs à risque dans le cas n°1 : " + usersARisque1.size());
     System.out.println("-----------------------------------------------");
-    System.out.println(usersARisque1);
     printUsers(usersARisque1);
 
     System.out.println("-----------------------------------------------");

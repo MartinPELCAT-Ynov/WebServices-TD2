@@ -1,11 +1,14 @@
 package ex6;
 
+import ex6.utils.DateUtils;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Cours {
+public class Cours implements IAtRisk {
 
     List<Etudiant> etudiantsInscrits = new ArrayList<>();
     List<Etudiant> etudiantsAbsents = new ArrayList<>();
@@ -13,7 +16,7 @@ public class Cours {
     Date dateCours;
 
     public Cours(List<Etudiant> etudiantsInscrits, List<Etudiant> etudiantsAbsents, Professeur professeur,
-            Date dateCours) {
+                 Date dateCours) {
         this.etudiantsInscrits = etudiantsInscrits;
         this.etudiantsAbsents = etudiantsAbsents;
         this.professeur = professeur;
@@ -39,4 +42,18 @@ public class Cours {
         }
     }
 
+    public Collection<Utilisateur> getUsersAtRisk(Utilisateur utilisateur, Date riskDate) {
+
+        List<Utilisateur> users = new ArrayList<>();
+        if (!DateUtils.isDateBetween(riskDate, dateCours)) {
+            return users;
+        }
+
+        List<Etudiant> presentStudents = this.getEtudiantsPresents();
+        if (presentStudents.contains(utilisateur) || professeur == utilisateur) {
+            users.addAll(presentStudents);
+            users.add(professeur);
+        }
+        return users;
+    }
 }

@@ -1,6 +1,11 @@
 package ex6;
 
+import ex6.utils.DateUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public class RendezVousIndividuel {
 
@@ -15,12 +20,16 @@ public class RendezVousIndividuel {
     }
 
 
-    public Utilisateur getUtilisateurAtRisk(Utilisateur utilisateur, Date riskDate) {
-        boolean dateAtRisk = dateRdv.before(new Date(riskDate.getTime() - 7 * 24 * 60 * 60 * 1000));
-        if (!dateAtRisk) return null;
-        if (conseillerOrientation == utilisateur) return etudiant;
-        if (etudiant == utilisateur) return conseillerOrientation;
-        return null;
+    public Collection<Utilisateur> getUtilisateurAtRisk(Utilisateur utilisateur, Date riskDate) {
+
+        List<Utilisateur> utilisateurs = new ArrayList<>();
+        boolean dateAtRisk = DateUtils.isDateBetween(riskDate, dateRdv);
+        if (!dateAtRisk) return utilisateurs;
+        if (conseillerOrientation == utilisateur ||etudiant == utilisateur) {
+            utilisateurs.add(utilisateur);
+            utilisateurs.add(conseillerOrientation);
+        }
+        return utilisateurs;
     }
 
 }
