@@ -27,7 +27,6 @@ public class Ecole {
         utilisateursARisque.addAll(userCoursAtRisk);
 
         if (utilisateurPositif.isMembreDirection()) {
-            System.out.println(utilisateurPositif.nom + "" + dateTestCovid.toString());
             List<MembreDuPersonnel> membresDirections = this.membresDuPersonnel
                     .stream()
                     .filter(m -> m.isMembreDirection())
@@ -40,8 +39,6 @@ public class Ecole {
                             .filter(journeeAbsence -> journeeAbsence.membre.equals(m))
                             .allMatch(journeeAbsence -> DateUtils.isDateBetween(dateTestCovid, journeeAbsence.dateAbsence))
                     ).collect(Collectors.toList());
-
-            System.out.println(directionAtRisk);
 
             utilisateursARisque.addAll(directionAtRisk);
 
