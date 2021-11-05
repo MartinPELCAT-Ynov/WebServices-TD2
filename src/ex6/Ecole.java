@@ -20,19 +20,30 @@ public class Ecole {
         Set<Utilisateur> utilisateursARisque = new LinkedHashSet<>();
         utilisateursARisque.add(utilisateurPositif);
 
-        List<Utilisateur> userCoursAtRisk = this.cours.stream().map(c -> c.getUsersAtRisk(utilisateurPositif, dateTestCovid))
+        utilisateursARisque.addAll(extractCoursAtRisk(utilisateurPositif, dateTestCovid));
+
+        utilisateursARisque.addAll(extractMembreDirectionAtRisk(utilisateurPositif, dateTestCovid));
+
+        utilisateursARisque.addAll(extractRdvAtRisk(utilisateurPositif, dateTestCovid));
+
+        return utilisateursARisque;
+    }
+
+    private List<Utilisateur> extractCoursAtRisk(Utilisateur utilisateurPositif, Date dateTestCovid) {
+        return this.cours.stream().map(c -> c.getUsersAtRisk(utilisateurPositif, dateTestCovid))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
+    }
 
-        utilisateursARisque.addAll(userCoursAtRisk);
 
+    private List<Utilisateur> extractMembreDirectionAtRisk(Utilisateur utilisateurPositif, Date dateTestCovid) {
         if (utilisateurPositif.isMembreDirection()) {
             List<MembreDuPersonnel> membresDirections = this.membresDuPersonnel
                     .stream()
                     .filter(m -> m.isMembreDirection())
                     .collect(Collectors.toList());
 
-            List<Utilisateur> directionAtRisk = membresDirections
+            return membresDirections
                     .stream()
                     .filter(m -> this.journeesAbsence
                             .stream()
@@ -40,16 +51,14 @@ public class Ecole {
                             .allMatch(journeeAbsence -> DateUtils.isDateBetween(dateTestCovid, journeeAbsence.dateAbsence))
                     ).collect(Collectors.toList());
 
-            utilisateursARisque.addAll(directionAtRisk);
 
         }
+        return new ArrayList<>();
+    }
 
-        List<Utilisateur> rdvUserAtRisk = rendezVousIndividuels.stream()
+    private List<Utilisateur> extractRdvAtRisk(Utilisateur utilisateurPositif, Date dateTestCovid) {
+        return rendezVousIndividuels.stream()
                 .map((rdv) -> rdv.getUtilisateurAtRisk(utilisateurPositif, dateTestCovid)).flatMap(Collection::stream).collect(Collectors.toList());
-
-        utilisateursARisque.addAll(rdvUserAtRisk);
-
-        return utilisateursARisque;
     }
 
 }
